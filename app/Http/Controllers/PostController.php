@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('verifyCategoryCount')->only(['store', 'create']);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,10 @@ class PostController extends Controller
      */
     public function index()
     {
+        //$posts = Post::with('category')->get();
+        //dd($posts->toArray());
         return view('posts.index')->with('posts', Post::all());
+
     }
 
     /**
@@ -24,7 +35,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        return view('posts.create')->with('categories', Category::all());
     }
 
     /**
@@ -41,7 +52,8 @@ class PostController extends Controller
             'description' => 'required',
             'content' => 'required',
             'published_at' => 'required',
-            'image' => 'image|max:2048'
+            'image' => 'required|image|max:2048',
+            'category' => 'required'
         ]);
 
         $file = '';
@@ -58,6 +70,7 @@ class PostController extends Controller
         $post->content = $request->content;
         $post->published_at = $request->published_at;
         $post->image = $imageName;
+        $post->category_id = $request->category;
 
         $post->save();
 
@@ -82,9 +95,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
+        return view('posts.create')->with('post', $post)->with('categories', Category::all());
     }
 
     /**
@@ -94,9 +107,36 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'content' => 'required',
+            'published_at' => 'required',
+            'category' => 'required'
+        ]);
+
+        $data = $request->only(['title', 'description', 'content', 'published_at', 'category']);
+
+        $file = '';
+        $upload_path = public_path('uploads');
+        if($request->hasFile('image')){
+            $file = $request->file('image');
+            $imageName = time()."_".$file->getClientOriginalName();
+            $file->move($upload_path, $imageName);
+
+            $post->deleteImage();
+
+            $data['image'] = $imageName;
+
+        }
+
+        $post->update($data);
+
+        session()->flash('success', 'Post updated successfully');
+        return redirect(route('posts.index'));
+
     }
 
     /**
@@ -110,11 +150,7 @@ class PostController extends Controller
 
         $post = Post::withTrashed()->where('id', $id)->firstOrFail();
         if($post->trashed()){
-            $image_path = public_path("uploads/{$post->image}");
-
-            if (isset($image_path)) {
-                unlink($image_path);
-            }
+            $post->deleteImage();
             $post->forceDelete();
         }
         else {
@@ -134,6 +170,15 @@ class PostController extends Controller
         return view('posts.index')->with('posts', $trashed);
     }
 
+    public function restore($id)
+    {
+        $post = Post::withTrashed()->where('id', $id)->firstOrFail();
+        $post->restore();
+
+        session()->flash('success', 'Post restored successfully');
+        return redirect()->back();
+    }
+
     // public static function validateData($data)
     // {
     //     //dd('here');
@@ -145,4 +190,7 @@ class PostController extends Controller
     //     ]);
     //     return $data;
     // }
+
+
+
 }
