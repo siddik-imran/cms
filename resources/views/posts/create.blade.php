@@ -55,7 +55,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="image">Image</label>
+                    <label for="category">Select Category</label>
                     <select name="category" id="category" class="form-control">
                        @foreach ($categories as $category )
                             <option value="{{ $category->id }}"
@@ -72,6 +72,27 @@
                         <div class="text-danger text-bold">{{ $message }}</div>
                     @enderror
                 </div>
+                @if($tags->count() > 0)
+                <div class="form-group">
+                    <label for="tags">Select Tags</label>
+                    <select name="tags[]" id="tags" class="form-control tag-selector" multiple>
+                        @foreach ($tags as $tag)
+                            <option value="{{ $tag->id }}"
+                               @if (isset($post))
+                                @if (in_array($tag->id, $post->tags->pluck('id')->toArray())) selected
+                                @endif
+                               @endif
+                            >
+                                {{ $tag->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    @error('tags')
+                        <div class="text-danger text-bold">{{ $message }}</div>
+                    @enderror
+                </div>
+                @endif
                 <div class="form-group">
                    <button type="submit" class="btn btn-sm btn-success">
                        {{ isset($post) ? 'Update' : 'Create' }}
@@ -87,14 +108,21 @@
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.css"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         flatpickr('#published_at', {
             enableTime: true,
+            enableSeconds: true
         })
+
+        $(document).ready(function() {
+            $('.tag-selector').select2();
+        });
     </script>
 @endsection
