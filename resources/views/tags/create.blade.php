@@ -1,9 +1,16 @@
 @extends('layouts.app')
 
+@section('page_name')
+Tags
+@endsection
+
 @section('content')
-    <div class="card card-default">
-        <div class="card-header">
-            {{ isset($tag)? 'Edit Tag' : 'Create Tag' }}
+<div class="col-md-8 offset-2">
+    <div class="card mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">
+            {{ isset($tag)? 'Edit Tag' : 'Create a new tag' }}
+        </h6>
         </div>
         <div class="card-body">
             <form action="{{ isset($tag) ? route('tags.update', $tag->id) : route('tags.store') }}" method="POST">
@@ -26,5 +33,5 @@
             </form>
         </div>
     </div>
-
+</div>
 @endsection

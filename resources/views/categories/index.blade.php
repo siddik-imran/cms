@@ -1,27 +1,39 @@
 @extends('layouts.app')
 
+@section('page_name')
+Caregories
+@endsection
+
 @section('content')
-    <div class="card card-default">
-        <div class="card-header">
-            <b>Categories</b>
-            <a href="{{ route('categories.create') }}" class="btn btn-success float-right">Add Category</a>
-        </div>
-        <div class="card-body">
-            @if ($categories->count() > 0)
-            <table class="table">
-                <thead>
-                    <th>Name</th>
-                    <th>No of Posts</th>
-                    <th>Action</th>
-                </thead>
+<div class="col-10 offset-1 mb-4">
+    <div class="card">
+      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Category List Table</h6>
+        @if(Auth()->user()->role == 'admin')
+        <a href="{{ route('categories.create') }}" class="btn btn-primary btn-sm"><i class="fas fa-plus-circle"></i> Add Category</a>
+        @endif
+      </div>
+      <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+          <thead class="thead-light">
+            <tr>
+              <th>Name</th>
+              <th>No. of post</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          @if($categories->count() > 0)
+          <tbody>
                 <tbody>
                    @foreach ($categories as $category)
                     <tr>
                         <td>{{ $category->name }}</td>
                         <td>{{ $category->posts->count() }}</td>
                         <td>
-                            <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-info">Edit</a>
-                            <button class="btn btn-danger btn-sm" onclick="handleDelete({{$category->id}})">Delete</button>
+                            @if(Auth()->user()->role == 'admin')
+                            <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-sm btn-info"><i class="fas fa-edit"></i></a>
+                            <button class="btn btn-danger btn-sm" onclick="handleDelete({{$category->id}})"><i class="fas fa-trash"></i></button>
+                            @endif
                         </td>
                     </tr>
                    @endforeach
@@ -47,19 +59,21 @@
                         </div>
                         <div class="modal-body">
                         <p class="text-center text-bold">
-                            Are you sure?
+                            Are you sure to delete {{$category->name}}?
                         </p>
                         </div>
                         <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Go Back</button>
-                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Go Back</button>
+                        <button type="submit" class="btn btn-danger btn-sm">Yes, Delete</button>
                         </div>
                     </div>
                 </form>
                 </div>
             </div>
         </div>
+        <div class="card-footer"></div>
     </div>
+</div>
 
 @endsection
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
@@ -80,7 +81,7 @@ class PostController extends Controller
             $post->tags()->attach($request->tags);
         }
 
-        session()->flash('success', 'Post created successfully');
+        Session::flash('success', 'Post created successfully');
         return redirect(route('posts.index'));
     }
 
@@ -144,7 +145,7 @@ class PostController extends Controller
 
         $post->update($data);
 
-        session()->flash('success', 'Post updated successfully');
+        Session::flash('success', 'Post updated successfully');
         return redirect(route('posts.index'));
 
     }
@@ -167,7 +168,7 @@ class PostController extends Controller
             $post->delete();
         }
 
-        session()->flash('success', 'Post deleted successfully');
+        Session::flash('success', 'Post deleted successfully');
         return redirect(route('posts.index'));
     }
 
@@ -185,22 +186,9 @@ class PostController extends Controller
         $post = Post::withTrashed()->where('id', $id)->firstOrFail();
         $post->restore();
 
-        session()->flash('success', 'Post restored successfully');
+        Session::flash('success', 'Post restored successfully');
         return redirect()->back();
     }
-
-    // public static function validateData($data)
-    // {
-    //     //dd('here');
-    //     $data = $data->validate($data,[
-    //         'name' => 'required|unique:posts',
-    //         'description' => 'required',
-    //         'content' => 'required',
-    //         'image' => 'required'
-    //     ]);
-    //     return $data;
-    // }
-
 
 
 }

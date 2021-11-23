@@ -32,15 +32,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('/posts', 'PostController');
 
-    Route::get('/trashed-posts', 'PostController@trashed')->name('trashed-posts.index');
-    Route::put('/restore-posts/{post}', 'PostController@restore')->name('restore-posts');
+
+    Route::get('/users/profile', 'UsersControler@editProfile')->name('users.edit-profile');
+    Route::put('/users/profile', 'UsersControler@updateProfile')->name('users.update-profile');
 
 });
 
 
 Route::middleware(['auth', 'admin'])->group(function() {
-    Route::get('/users', 'UsersControler@index')->name('users.index');
-    Route::get('/users/profile', 'UsersControler@editProfile')->name('users.edit-profile');
-    Route::put('/users/profile', 'UsersControler@updateProfile')->name('users.update-profile');
+    Route::get('/user-list', 'UsersControler@index')->name('users.index');
     Route::post('/users/{user}/make-admin', 'UsersControler@makeAdmin')->name('users.make-admin');
+
+    Route::get('/trashed-posts', 'PostController@trashed')->name('trashed-posts.index');
+    Route::put('/restore-posts/{post}', 'PostController@restore')->name('restore-posts');
 });

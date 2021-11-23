@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -9,6 +10,7 @@ class UsersControler extends Controller
 {
     public function index()
     {
+        //dd(User::all()->toArray());
         return view('users.index')->with('users', User::all());
     }
 
@@ -18,7 +20,7 @@ class UsersControler extends Controller
         $user->role = 'admin';
         $user->save();
 
-        session()->flash('success', 'User role change successfully');
+        Session::flash('success', 'User role change successfully');
         return redirect(route('users.index'));
     }
 
@@ -31,17 +33,37 @@ class UsersControler extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'about' => 'required'
+            'about' => 'required',
+            'image' => 'image'
         ]);
+
+        //dd($request->all());
 
         $user = auth()->user();
 
-        $user->update([
-            'name' => $request->name,
-            'about' => $request->about,
-        ]);
+        $file = '';
+        $upload_path = public_path('users');
+        if($request->hasFile('image')){
+            $file = $request->file('image');
+            $imageName = time()."_".$file->getClientOriginalName();
+            $file->move($upload_path, $imageName);
 
-        session()->flash('success', 'Profile updated successfully');
+            $user->update([
+                'name' => $request->name,
+                'about' => $request->about,
+                'password' => $request->password,
+                'image' => $imageName
+            ]);
+        }
+        else{
+            $user->update([
+                'name' => $request->name,
+                'about' => $request->about,
+                'password' => $request->password
+            ]);
+        }
+
+        Session::flash('success', 'Profile updated successfully');
         return redirect()->back();
     }
 }

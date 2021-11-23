@@ -1,9 +1,17 @@
 @extends('layouts.app')
 
+@section('page_name')
+Post create
+@endsection
+
+
 @section('content')
-    <div class="card card-deafult">
-        <div class="card-header">
-           {{ isset($post) ? 'Edit Post' : 'Create Post' }}
+<div class="col-md-10 offset-1">
+    <div class="card mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">
+           {{ isset($post) ? 'Edit Post' : 'Create a new post' }}
+        </h6>
         </div>
         <div class="card-body">
             <form action="{{ isset($post) ? route('posts.update', $post->id) : route('posts.store') }}" method="POST" enctype="multipart/form-data">
@@ -94,7 +102,7 @@
                 </div>
                 @endif
                 <div class="form-group">
-                   <button type="submit" class="btn btn-sm btn-success">
+                   <button type="submit" class="btn btn-sm btn-primary">
                        {{ isset($post) ? 'Update' : 'Create' }}
                    </button>
                 </div>
@@ -102,7 +110,7 @@
             </form>
         </div>
     </div>
-
+</div>
 @endsection
 
 @section('css')

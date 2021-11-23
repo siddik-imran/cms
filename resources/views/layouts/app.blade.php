@@ -1,133 +1,205 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link href="img/logo/logo.png" rel="icon">
+  <title>RuangAdmin - Dashboard</title>
+  <link href="{{ asset('assets/admin/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('assets/admin/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ asset('assets/admin/css/ruang-admin.min.css') }}" rel="stylesheet">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link href="{{ asset('css/toaster.min.css') }}" rel="stylesheet" type="text/css">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-
-    @yield('css')
+   @yield('css')
 
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    CMS
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+<body id="page-top">
+  <div id="wrapper">
+    <!-- Sidebar -->
+    @if(Auth::user())
+    <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon">
+          <img src="{{ asset('assets/admin/img/logo/logo2.png') }}">
+        </div>
+        <div class="sidebar-brand-text mx-3">Admin Panel</div>
+      </a>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item  {{ Route::currentRouteName() == 'home' ? 'active' : '' }}" >
+        <a class="nav-link" href="{{ route('home') }}">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span></a>
+      </li>
+      <hr class="sidebar-divider">
+      <div class="sidebar-heading">
+        Features
+      </div>
+      <li class="nav-item {{ Route::currentRouteName() == 'categories.*' ? 'active' : '' }}" >
+        <a class="nav-link" href="{{ route('categories.index') }}">
+            <i class="fas fa-list"></i>
+          <span>Categories</span>
+        </a>
+      </li>
+      <li class="nav-item {{ Route::currentRouteName() == 'tags.*' ? 'active' : '' }}" >
+        <a class="nav-link" href="{{ route('tags.index') }}">
+            <i class="fas fa-list"></i>
+          <span>Tags</span>
+        </a>
+      </li>
+      <li class="nav-item {{ Route::currentRouteName() == 'posts.*' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('posts.index') }}">
+            <i class="fas fa-list"></i>
+          <span>Posts</span>
+        </a>
+      </li>
 
-                    </ul>
+      <li class="nav-item {{ Route::currentRouteName() == 'users.*' ? 'active' : '' }}" >
+        <a class="nav-link" href="{{ route('users.index') }}">
+            <i class="fas fa-users"></i>
+          <span>Users</span>
+        </a>
+      </li>
+      <li class="nav-item {{ Route::currentRouteName() == 'trashed-posts.index' ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('trashed-posts.index') }}">
+            <i class="far fa-trash-alt"></i>
+          <span>Trashed</span>
+        </a>
+      </li>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
+    </ul>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('users.edit-profile') }}">
-                                        My Profile
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    <!--End Sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+        <!-- TopBar -->
+        <nav class="navbar navbar-expand navbar-light bg-navbar topbar mb-4 static-top">
+          <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
 
-        <main class="py-4">
-
-            @auth
-                <div class="container">
-                    @if (session()->has('success'))
-                        <div class="alert alert-success">
-                            {{ session()->get('success') }}
-                        </div>
-                    @endif
-                    @if (session()->has('error'))
-                        <div class="alert alert-danger">
-                            {{ session()->get('error') }}
-                        </div>
-                    @endif
-                    <div class="row">
-                        <div class="col-md-4">
-                            <ul class="list-group">
-                                @if (auth()->user()->isAdmin())
-                                <li class="list-group-item">
-                                    <a href="{{ route('users.index')}}">Users</a>
-                                </li>
-                                @endif
-                                <li class="list-group-item">
-                                    <a href="{{ route('categories.index')}}">Categories</a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="{{ route('tags.index')}}">Tags</a>
-                                </li>
-                                <li class="list-group-item">
-                                    <a href="{{ route('posts.index') }}">Posts</a>
-                                </li>
-                            </ul>
-                            <ul class="list-group my-5">
-
-                                <li class="list-group-item">
-                                    <a href="{{ route('trashed-posts.index') }}">Trashed Posts</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-8">
-                            @yield('content')
-                        </div>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                aria-labelledby="searchDropdown">
+                <form class="navbar-search">
+                  <div class="input-group">
+                    <input type="text" class="form-control bg-light border-1 small" placeholder="What do you want to look for?"
+                      aria-label="Search" aria-describedby="basic-addon2" style="border-color: #3f51b5;">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                      </button>
                     </div>
-                </div>
-            @else
+                  </div>
+                </form>
+              </div>
+            </li>
+
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <img class="img-profile rounded-circle" src="{{ (Auth::user()->image != Null) ? asset('users/'. Auth::user()->image) : asset('assets/admin/img/boy.png') }}" style="max-width: 60px">
+                <span class="ml-2 d-none d-lg-inline text-white small">
+                    @if (Auth::user())
+                       {{ Auth::user()->name }}
+                    @endif
+                </span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ route('users.edit-profile') }}">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Profile
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                  document.getElementById('logout-form').submit();">
+                     {{ __('Logout') }}
+
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <!-- End Topbar -->
+        @endif
+        <!-- Container Fluid-->
+        <div class="container-fluid" id="container-wrapper">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <ol class="breadcrumb">
+              @if(Auth::user())<li class="breadcrumb-item"><a href="./">Home</a></li>@endif
+              <li class="breadcrumb-item active" aria-current="page">@yield('page_name')</li>
+            </ol>
+          </div>
+
+          <div class="row mb-3">
+
                 @yield('content')
-            @endauth
 
-        </main>
+            </div>
+        </div>
+        <!---Container Fluid-->
+      </div>
+      <!-- Footer -->
+      {{-- <footer class="sticky-footer bg-white" style="margin-top: 50vh ">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>copyright &copy; <script> document.write(new Date().getFullYear()); </script> - developed with
+              <b><a href="https://indrijunanda.gitlab.io/" target="_blank">care & love</a></b>
+            </span>
+          </div>
+        </div>
+      </footer> --}}
+      <!-- Footer -->
     </div>
+  </div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+  <!-- Scroll to top -->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
 
-    @yield('script')
+  <script src="{{ asset('assets/admin/vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/js/ruang-admin.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/vendor/chart.js/Chart.min.js') }}"></script>
+  <script src="{{ asset('assets/admin/js/demo/chart-area-demo.js') }}"></script>
+
+  <script src="{{ asset('js/toaster.min.js') }}"></script>
+
+  <script>
+      @if(Session::has('success'))
+        toastr.success("{{ Session::get('success') }}")
+      @endif
+
+      @if(Session::has('info'))
+        toastr.info("{{ Session::get('info') }}")
+      @endif
+
+      @if (Session::has('error'))
+        toastr.error("{{ Session::get('error') }}")
+      @endif
+  </script>
+
+  @yield('script')
+
 </body>
+
 </html>
