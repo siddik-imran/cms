@@ -60,8 +60,8 @@ Tags create
                         </p>
                         </div>
                         <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Go Back</button>
-                        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Go Back</button>
+                        <button type="submit" class="btn btn-danger btn-sm">Yes, Delete</button>
                         </div>
                     </div>
                 </form>
